@@ -36,24 +36,13 @@ The application will be available at `http://localhost:3000`
 
 ## Reproducing the Issue
 
-### Method 1: Using the complex query (most likely to trigger the issue)
+### Using simple cached query
 
-1. First, create some test data by calling the seed endpoint or manually inserting data
-2. Call the expiring posts endpoint:
+1. Call the get endpoint (which uses cache):
    ```bash
-   curl http://localhost:3000/posts/expiring/7
+   curl http://localhost:3000/posts
    ```
-3. Check the console for cache-related errors from `RedisQueryResultCache.getFromCache`
-
-### Method 2: Using simple cached query
-
-1. Create a post with a known ID
-2. Call the get by ID endpoint (which uses cache):
-   ```bash
-   curl http://localhost:3000/posts/test-id-123
-   ```
-3. Call it again to hit the cache
-4. Check the console for any cache errors
+2. Check the console for any cache errors
 
 ## Expected Behavior
 
@@ -80,9 +69,3 @@ npm install typeorm@0.3.20
 # Restart the application
 npm run start:dev
 ```
-
-## Notes
-
-- The `getExpiringPosts` method in `posts.repository.ts` closely mimics the query from your `daily-notifications.task.event.ts` file
-- The query includes the same complex joins, subqueries, and cache configuration
-- The cache is configured to use Redis as in your main application
